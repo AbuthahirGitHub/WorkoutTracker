@@ -24,3 +24,28 @@ Output:
 Display the identified workout and count of repetitions on each frame.
 Save the processed video with annotations.
 Optionally, output a summary report with counts of each detected workout.
+
+
+WorkoutTracker/
+│
+├── models/                     # Directory for storing OpenPose models
+│   ├── pose/                   # Pose models
+│   │   ├── body_25/            # BODY_25 model files
+│   │   ├── coco/               # COCO model files
+│   │   └── mpi/                # MPI model files
+│   └── face/                   # (Optional) Face model files
+│
+├── src/                        # Source code directory
+│   ├── main.py                 # Main script for running the application
+│   ├── detect_activities.py    # Module for activity detection logic
+│   ├── preprocess_frame.py     # Module for frame preprocessing logic
+│   ├── draw_annotations.py     # Module for drawing annotations on frames
+│   ├── gui.py                  # Module for the GUI
+│   └── utils.py                # Utility functions
+│
+├── data/                       # Directory for input videos and output data
+│   ├── input/                  # Input videos
+│   └── output/                 # Output files (JSON, etc.)
+│
+├── requirements.txt            # List of required Python packages
+└── README.md                   # Project description and instructions

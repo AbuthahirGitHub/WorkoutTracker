@@ -49,3 +49,14 @@ WorkoutTracker/
 │
 ├── requirements.txt            # List of required Python packages
 └── README.md                   # Project description and instructions
+
+
+# Workout Tracker
+
+This project uses OpenPose and OpenCV to detect and count workout activities from CCTV footage in a gym.
+
+## Setup
+
+1. Install the required Python packages:
+   ```sh
+   pip install -r requirements.txt

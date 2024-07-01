@@ -1,48 +1,50 @@
 import cv2
+import json
+import tkinter as tk
+from tkinter import filedialog
+from detect_activities import detect_activities
+from preprocess_frame import preprocess_frame
+from draw_annotations import draw_annotations
+from utils import load_openpose_model
 
-# Main script for running the application
-# Load the pre-trained YOLO model
-net = cv2.dnn.readNetFromDarknet('yolov3.cfg', 'yolov3.weights')
+def load_video():
+    video_path = filedialog.askopenfilename()
+    cap = cv2.VideoCapture(video_path)
+    return cap, video_path
 
-# Load the class labels
-with open('coco.names', 'r') as f:
-    classes = [line.strip() for line in f.readlines()]
+def save_output(detected_activities, repetitions, video_path):
+    output_data = {"video_path": video_path, "activities": detected_activities, "repetitions": repetitions}
+    output_file = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+    with open(output_file, 'w') as f:
+        json.dump(output_data, f)
 
-# Set the input and output layers
-layer_names = net.getLayerNames()
-output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+def main():
+    root = tk.Tk()
+    root.withdraw()
+    
+    cap, video_path = load_video()
+    model = load_openpose_model()
+    detected_activities = []
+    repetitions = []
 
-# Load the CCTV footage
-cap = cv2.VideoCapture('gym_footage.mp4')
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        
+        preprocessed_frame = preprocess_frame(frame)
+        activities, reps = detect_activities(preprocessed_frame, model)
+        detected_activities.extend(activities)
+        repetitions.extend(reps)
+        annotated_frame = draw_annotations(frame, activities, reps)
+        
+        cv2.imshow("Workout Tracker", annotated_frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-while True:
-    # Read a frame from the video
-    ret, frame = cap.read()
+    save_output(detected_activities, repetitions, video_path)
+    cap.release()
+    cv2.destroyAllWindows()
 
-    if not ret:
-        break
-
-    # Perform object detection
-    blob = cv2.dnn.blobFromImage(frame, 1/255, (416, 416), swapRB=True, crop=False)
-    net.setInput(blob)
-    outs = net.forward(output_layers)
-
-    # Process the detected objects
-    for out in outs:
-        for detection in out:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-
-            if confidence > 0.5:
-                # TODO: Perform exercise recognition and repetition counting
-                # You can use additional computer vision techniques or machine learning models here
-
-    # Display the frame with detected objects
-    cv2.imshow('Workout Tracker', frame)
-    if cv2.waitKey(1) == ord('q'):
-        break
-
-# Release the video capture and close the windows
-cap.release()
-cv2.destroyAllWindows()
+if __name__ == "__main__":
+    main()

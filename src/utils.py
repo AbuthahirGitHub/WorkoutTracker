@@ -8,3 +8,6 @@ def load_openpose_model():
     opWrapper.configure(params)
     opWrapper.start()
     return opWrapper
+
+
+    

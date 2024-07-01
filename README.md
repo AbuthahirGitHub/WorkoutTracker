@@ -60,3 +60,24 @@ This project uses OpenPose and OpenCV to detect and count workout activities fro
 1. Install the required Python packages:
    ```sh
    pip install -r requirements.txt
+
+Detailed File Descriptions
+models/: Directory containing the pre-trained OpenPose models.
+
+pose/: Contains subdirectories for different pose models (BODY_25, COCO, MPI).
+face/: (Optional) Contains face model files if facial keypoint detection is needed.
+src/: Source code directory containing the following modules:
+
+main.py: The main script that integrates all components and runs the application.
+detect_activities.py: Contains logic for detecting and classifying different workouts.
+preprocess_frame.py: Handles frame preprocessing (e.g., resizing, color conversion).
+draw_annotations.py: Contains functions to draw annotations (e.g., detected activities, repetition counts) on frames.
+gui.py: Implements the graphical user interface (GUI) for user interaction.
+utils.py: Contains utility functions (e.g., for loading models, saving output).
+data/: Directory for input videos and output data.
+
+input/: Stores input video files.
+output/: Stores output files such as JSON files with detected activities and counts.
+requirements.txt: Lists all required Python packages (e.g., OpenCV, TensorFlow, OpenPose).
+
+README.md: Provides an overview of the project, setup instructions, and usage guidelines.

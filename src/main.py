@@ -8,15 +8,26 @@ from draw_annotations import draw_annotations
 from utils import load_openpose_model
 
 def load_video():
-    video_path = filedialog.askopenfilename()
-    cap = cv2.VideoCapture(video_path)
+    root = tk.Tk()
+    root.withdraw()
+    try:
+        video_path = filedialog.askopenfilename()
+        cap = cv2.VideoCapture(video_path)
+        if not cap.isOpened():
+            raise Exception("Failed to open video file")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return None, None
     return cap, video_path
 
 def save_output(detected_activities, repetitions, video_path):
     output_data = {"video_path": video_path, "activities": detected_activities, "repetitions": repetitions}
-    output_file = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
-    with open(output_file, 'w') as f:
-        json.dump(output_data, f)
+    try:
+        output_file = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        with open(output_file, 'w') as f:
+            json.dump(output_data, f)
+    except Exception as e:
+        print(f"Error saving output: {str(e)}")
 
 def main():
     root = tk.Tk()

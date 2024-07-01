@@ -1,4 +1,3 @@
-# Module for drawing annotations on frames
 import cv2
 
 def draw_annotations(frame, detected_activities, repetitions):
